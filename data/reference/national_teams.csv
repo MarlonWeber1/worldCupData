@@ -1,0 +1,49 @@
+team_key,team_code,team_name,continent
+1,CAN,Canada,North America
+2,MEX,Mexico,North America
+3,USA,United States,North America
+4,PAN,Panama,North America
+5,HAI,Haiti,North America
+6,CUW,Curacao,North America
+7,ARG,Argentina,South America
+8,BRA,Brazil,South America
+9,COL,Colombia,South America
+10,ECU,Ecuador,South America
+11,PAR,Paraguay,South America
+12,URU,Uruguay,South America
+13,AUT,Austria,Europe
+14,BEL,Belgium,Europe
+15,BIH,Bosnia and Herzegovina,Europe
+16,CRO,Croatia,Europe
+17,CZE,Czech Republic,Europe
+18,ENG,England,Europe
+19,FRA,France,Europe
+20,GER,Germany,Europe
+21,NED,Netherlands,Europe
+22,NOR,Norway,Europe
+23,POR,Portugal,Europe
+24,SCO,Scotland,Europe
+25,ESP,Spain,Europe
+26,SWE,Sweden,Europe
+27,SUI,Switzerland,Europe
+28,TUR,Turkey,Europe
+29,ALG,Algeria,Africa
+30,CPV,Cape Verde,Africa
+31,COD,DR Congo,Africa
+32,EGY,Egypt,Africa
+33,GHA,Ghana,Africa
+34,CIV,Ivory Coast,Africa
+35,MAR,Morocco,Africa
+36,SEN,Senegal,Africa
+37,RSA,South Africa,Africa
+38,TUN,Tunisia,Africa
+39,IRN,Iran,Asia
+40,IRQ,Iraq,Asia
+41,JPN,Japan,Asia
+42,JOR,Jordan,Asia
+43,QAT,Qatar,Asia
+44,KSA,Saudi Arabia,Asia
+45,KOR,South Korea,Asia
+46,UZB,Uzbekistan,Asia
+47,AUS,Australia,Oceania
+48,NZL,New Zealand,Oceania
