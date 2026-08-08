@@ -8,7 +8,6 @@ season_id = "58210"
 list_ids = []
 page = 0
 
-# get all matches ids
 while True:
     url_calendar = (
         f"https://www.sofascore.com/api/v1/unique-tournament/"
@@ -21,7 +20,7 @@ while True:
         break
 
     if response.status_code != 200:
-        print(f"Erro {response.status_code} ao acessar página {page}")
+        print(f"Erro {response.status_code} on page {page}")
         break
 
     events = response.json().get("events", [])
@@ -39,6 +38,7 @@ print(f"{len(list_ids)} partidas encontradas.")
 
 # raw files
 
+shotmap = []
 raw_matches = []
 raw_lineups = []
 
@@ -67,7 +67,7 @@ for event_id in list_ids:
 
     # players lineups
 
-    url_lineups = f"https://www.sofascore.com/api/v1/event/{event_id}/lineups"
+    url_lineups = f"https://www.sofascore.com/api/v1/event/" f"{event_id}/lineups"
     res_lineups = requests.get(url_lineups, impersonate="chrome")
 
     if res_lineups.status_code == 200:
@@ -97,10 +97,32 @@ for event_id in list_ids:
 
     else:
         print("error")
+
+    time.sleep(1.5)
+
+    # player shotmap
+
+    url_shotmap = f"https://www.sofascore.com/api/v1/event/" f"{event_id}/shotmap"
+    res_shotmap = requests.get(url_shotmap, impersonate="chrome")
+
+    if res_shotmap.status_code == 200:
+        data = res_shotmap.json()
+
+        if "shotmap" in data and data["shotmap"]:
+
+            df_temp = pd.json_normalize(data["shotmap"])
+            df_temp["match_id"] = event_id
+
+            shotmap.append(df_temp)
+
+
+    else:
+        print("error")
+
     time.sleep(1.5)
 
 
 # save raw files
 pd.DataFrame(raw_matches).to_csv("../../data/raw/raw_matches.csv", index=False, encoding="utf-8")
 pd.DataFrame(raw_lineups).to_csv("../../data/raw/raw_lineups.csv", index=False, encoding="utf-8")
-
+pd.concat(shotmap, ignore_index=True).to_csv("../../data/raw/raw_shotmap.csv", index=False, encoding="utf-8")
