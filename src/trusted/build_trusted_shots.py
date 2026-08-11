@@ -67,19 +67,23 @@ print(f"Null shots: {null_shots}, Null matches: {null_matches}, Null players: {n
 invalid_xg = df_shots.filter(
     (col("xg") < 0) | (col("xg") > 1)
 ).count()
-
 invalid_xgot = df_shots.filter(
     (col("xgot") < 0) | (col("xgot") > 1)
 ).count()
-
 invalid_coordinates = df_shots.filter(
     (col("coord_x") < 0) |
     (col("coord_x") > 100) |
     (col("coord_y") < 0) |
     (col("coord_y") > 100)
 ).count()
+invalid_shot_ids = df_shots.filter(col("shot_id") <= 0).count()
+invalid_player_ids = df_shots.filter(col("player_id") <= 0).count()
+invalid_match_ids = df_shots.filter(col("match_id") <= 0).count()
 
 print(f"Invalid xg: {invalid_xg}, Invalid xgot: {invalid_xgot}, Invalid coordinates: {invalid_coordinates}")
+print(f"Invalid shot ids: {invalid_shot_ids}")
+print(f"Invalid player ids: {invalid_player_ids}")
+print(f"Invalid match ids: {invalid_match_ids}")
 
 # write the trusted shots data to parquet
 df_shots.write.mode("overwrite").parquet("../../data/trusted/shots")

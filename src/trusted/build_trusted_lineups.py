@@ -65,19 +65,21 @@ invalid_minutes = df_lineups.filter(
 ).count()
 invalid_goals = df_lineups.filter(col("goals") < 0).count()
 invalid_assists = df_lineups.filter(col("assists") < 0).count()
+invalid_match_id = df_lineups.filter(col("match_id") <= 0).count()
+invalid_player_id = df_lineups.filter(col("player_id") <= 0).count()
 
-print(f"Invalid minutes played: {invalid_minutes}, Invalid goals: {invalid_goals}, Invalid assists: {invalid_assists}")
+print(f"Invalid minutes played: {invalid_minutes}")
+print(f"Invalid goals: {invalid_goals}")
+print(f"Invalid assists: {invalid_assists}")
+print(f"Invalid match ids: {invalid_match_id}")
+print(f"Invalid player ids: {invalid_player_id}")
 
 # verify if there are any duplicate (one player that played in the same match more than once
 duplicate_lineups = (
-    df_lineups
-    .groupBy("player_id", "match_id")
-    .count()
-    .filter(col("count") > 1)
+    df_lineups.groupBy("player_id", "match_id").count().filter(col("count") > 1)
 )
 
 duplicate_lineups.show()
-
 
 # write the trusted lineups data to parquet
 df_lineups.write.mode("overwrite").parquet("../../data/trusted/lineups")
