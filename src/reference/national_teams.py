@@ -4,10 +4,10 @@ national_teams_data = [
     # North America
     {"team_key": 1, "team_code": "CAN", "team_name": "Canada", "continent": "North America"},
     {"team_key": 2, "team_code": "MEX", "team_name": "Mexico", "continent": "North America"},
-    {"team_key": 3, "team_code": "USA", "team_name": "United States", "continent": "North America"},
+    {"team_key": 3, "team_code": "USA", "team_name": "USA", "continent": "North America"},
     {"team_key": 4, "team_code": "PAN", "team_name": "Panama", "continent": "North America"},
     {"team_key": 5, "team_code": "HAI", "team_name": "Haiti", "continent": "North America"},
-    {"team_key": 6, "team_code": "CUW", "team_name": "Curacao", "continent": "North America"},
+    {"team_key": 6, "team_code": "CUW", "team_name": "Curaçao", "continent": "North America"},
 
     # South America
     {"team_key": 7, "team_code": "ARG", "team_name": "Argentina", "continent": "South America"},
@@ -20,9 +20,9 @@ national_teams_data = [
     # Europe
     {"team_key": 13, "team_code": "AUT", "team_name": "Austria", "continent": "Europe"},
     {"team_key": 14, "team_code": "BEL", "team_name": "Belgium", "continent": "Europe"},
-    {"team_key": 15, "team_code": "BIH", "team_name": "Bosnia and Herzegovina", "continent": "Europe"},
+    {"team_key": 15, "team_code": "BIH", "team_name": "Bosnia & Herzegovina", "continent": "Europe"},
     {"team_key": 16, "team_code": "CRO", "team_name": "Croatia", "continent": "Europe"},
-    {"team_key": 17, "team_code": "CZE", "team_name": "Czech Republic", "continent": "Europe"},
+    {"team_key": 17, "team_code": "CZE", "team_name": "Czechia", "continent": "Europe"},
     {"team_key": 18, "team_code": "ENG", "team_name": "England", "continent": "Europe"},
     {"team_key": 19, "team_code": "FRA", "team_name": "France", "continent": "Europe"},
     {"team_key": 20, "team_code": "GER", "team_name": "Germany", "continent": "Europe"},
@@ -33,7 +33,7 @@ national_teams_data = [
     {"team_key": 25, "team_code": "ESP", "team_name": "Spain", "continent": "Europe"},
     {"team_key": 26, "team_code": "SWE", "team_name": "Sweden", "continent": "Europe"},
     {"team_key": 27, "team_code": "SUI", "team_name": "Switzerland", "continent": "Europe"},
-    {"team_key": 28, "team_code": "TUR", "team_name": "Turkey", "continent": "Europe"},
+    {"team_key": 28, "team_code": "TUR", "team_name": "Türkiye", "continent": "Europe"},
 
     # Africa
     {"team_key": 29, "team_code": "ALG", "team_name": "Algeria", "continent": "Africa"},
@@ -41,7 +41,7 @@ national_teams_data = [
     {"team_key": 31, "team_code": "COD", "team_name": "DR Congo", "continent": "Africa"},
     {"team_key": 32, "team_code": "EGY", "team_name": "Egypt", "continent": "Africa"},
     {"team_key": 33, "team_code": "GHA", "team_name": "Ghana", "continent": "Africa"},
-    {"team_key": 34, "team_code": "CIV", "team_name": "Ivory Coast", "continent": "Africa"},
+    {"team_key": 34, "team_code": "CIV", "team_name": "Côte d'Ivoire", "continent": "Africa"},
     {"team_key": 35, "team_code": "MAR", "team_name": "Morocco", "continent": "Africa"},
     {"team_key": 36, "team_code": "SEN", "team_name": "Senegal", "continent": "Africa"},
     {"team_key": 37, "team_code": "RSA", "team_name": "South Africa", "continent": "Africa"},
