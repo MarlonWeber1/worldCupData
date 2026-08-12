@@ -17,6 +17,7 @@ df.printSchema()
 df_lineups = df.select(
     col("`player.id`").cast(IntegerType()).alias("player_id"),
     col("match_id").cast(IntegerType()).alias("match_id"),
+    col("team_side").alias("team_side"),
     col("`player.name`").alias("player_name"),
     col("`player.position`").alias("player_position"),
     col("`statistics.minutesPlayed`")
@@ -32,6 +33,9 @@ df_lineups.printSchema()
 # drop rows that idk the player_id or match_id
 df_lineups = df_lineups.dropna(subset=["player_id", "match_id"])
 
+# drop rows from player that did not play any minute 
+df_lineups = df_lineups.dropna(subset=["minutes_played"])
+
 # fill missing values
 df_lineups = df_lineups.fillna(
     {
@@ -40,9 +44,6 @@ df_lineups = df_lineups.fillna(
         "assists": 0,
     }
 )
-
-# drop rows from player that did not play any minute 
-df_lineups = df_lineups.dropna(subset=["minutes_played"])
 
 # verify if exists any rule to apply in the text of this columns
 df_lineups.select("player_position").distinct().show()
@@ -67,12 +68,14 @@ invalid_goals = df_lineups.filter(col("goals") < 0).count()
 invalid_assists = df_lineups.filter(col("assists") < 0).count()
 invalid_match_id = df_lineups.filter(col("match_id") <= 0).count()
 invalid_player_id = df_lineups.filter(col("player_id") <= 0).count()
+invalid_team_side = df_lineups.filter(~col("team_side").isin(["home", "away"])).count()
 
 print(f"Invalid minutes played: {invalid_minutes}")
 print(f"Invalid goals: {invalid_goals}")
 print(f"Invalid assists: {invalid_assists}")
 print(f"Invalid match ids: {invalid_match_id}")
 print(f"Invalid player ids: {invalid_player_id}")
+print(f"Invalid team sides: {invalid_team_side}")
 
 # verify if there are any duplicate (one player that played in the same match more than once
 duplicate_lineups = (
