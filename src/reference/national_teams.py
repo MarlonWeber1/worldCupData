@@ -37,7 +37,7 @@ national_teams_data = [
 
     # Africa
     {"team_key": 29, "team_code": "ALG", "team_name": "Algeria", "continent": "Africa"},
-    {"team_key": 30, "team_code": "CPV", "team_name": "Cape Verde", "continent": "Africa"},
+    {"team_key": 30, "team_code": "CPV", "team_name": "Cabo Verde", "continent": "Africa"},
     {"team_key": 31, "team_code": "COD", "team_name": "DR Congo", "continent": "Africa"},
     {"team_key": 32, "team_code": "EGY", "team_name": "Egypt", "continent": "Africa"},
     {"team_key": 33, "team_code": "GHA", "team_name": "Ghana", "continent": "Africa"},
