@@ -5,6 +5,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import pandas as pd
 import streamlit as st
+import matplotlib.pyplot as plt
+import numpy as np
 
 from data_loader import load_refined_tables
 from shot_map import get_player_shots, calculate_stats, plot_shot_map
@@ -15,7 +17,7 @@ st.set_page_config(
 )
 
 DARK_BG = "#0C0D0E"
-ACCENT = "#E4053A"
+ACCENT = "#38BDF8"
 
 st.markdown(
     f"""
@@ -151,6 +153,10 @@ if page == "Main":
     
     player_performance = player_performance.sort_values(["goals"], ascending=False)
 
+    player_performance["xg_total"] = player_performance["xg_total"].round(2)
+    player_performance["xg_per_shot"] = player_performance["xg_per_shot"].round(2)
+    player_performance["xgot_total"] = player_performance["xgot_total"].round(2)
+    player_performance["plus_minus"] = player_performance["plus_minus"].round(2)
     st.dataframe(
         player_performance[
             [
@@ -181,6 +187,148 @@ if page == "Main":
         width="stretch",
     )
 
+    st.divider()
+    col_left2, col_right2 = st.columns([1, 1])
+
+    with col_left2:
+        st.subheader("Team Efficiency — Goals vs xG")
+        national_teams = (
+            non_own.groupby("team_key")
+            .agg(
+                goals=("shot_type", lambda x: (x == "goal").sum()),
+                xG=("xg", "sum"),
+            )
+            .reset_index()
+            .merge(
+                df_teams[["team_key", "team_name", "continent"]],
+                on="team_key",
+                how="left",
+            )
+        )
+        national_teams["xG"] = national_teams["xG"].round(2)
+        national_teams["+/-"] = (national_teams["goals"] - national_teams["xG"]).round(2)
+        national_teams = national_teams.sort_values("+/-", ascending=False).head(10)
+        st.dataframe(
+            national_teams[["team_name", "continent", "goals", "xG", "+/-"]].rename(
+                columns={"team_name": "Team", "continent": "Continent", "goals": "Goals"}
+            ),
+            hide_index=True,
+            width="stretch",
+        )
+
+    with col_right2:
+        st.subheader("Shot Conversion Rate by Continent & Situation")
+
+        continent_info = non_own.merge(
+            df_teams[["team_key", "continent"]], on="team_key", how="left"
+        )
+
+        continent_goals_situation = (
+            continent_info[continent_info["shot_type"] == "goal"]
+            .groupby(["continent", "situation"])
+            .size()
+            .rename("goals")
+            .reset_index()
+        )
+
+        continent_total_shots = (
+            continent_info.groupby(["continent", "situation"])
+            .agg(total_shots=("xg", "count"))
+            .reset_index()
+        )
+
+        continent_goals_situation = continent_goals_situation.merge(
+            continent_total_shots, on=["continent", "situation"], how="left"
+        )
+
+        continent_goals_situation["conversion_rate"] = (
+            continent_goals_situation["goals"]
+            / continent_goals_situation["total_shots"]
+        ).round(2)
+
+        pivot = continent_goals_situation.pivot_table(
+            index="continent", 
+            columns="situation",  
+            values="conversion_rate",  
+            fill_value = 0
+        )
+        
+        fig, ax = plt.subplots(figsize=(12, 8))
+        fig.patch.set_facecolor("#0C0D0E")
+        ax.set_facecolor("#0C0D0E")
+        pivot.plot(kind="bar", ax=ax, width=0.7)
+        ax.set_xlabel("")
+        ax.set_xticklabels(pivot.index, rotation=30, ha="right", color="white", fontsize = 15)
+        ax.tick_params(colors="white")
+        legend = ax.legend(facecolor="#0C0D0E", labelcolor="white", edgecolor="gray", title="Situation")
+        legend.get_title().set_color("white")
+        ax.grid(True, alpha=0.2, axis="y")
+        st.pyplot(fig)
+        plt.close(fig)
+
+    st.divider()
+    st.subheader("Goals, xG & xGOT — Top 16 National Teams")
+
+    national_teams_performance = (
+        non_own.groupby("team_key")
+        .agg(
+            national_teams_goals=("shot_type", lambda x: (x == "goal").sum()),
+            national_teams_xg=("xg", "sum"),
+            national_teams_xgot=("xgot", "sum"),
+        )
+        .reset_index()
+        .sort_values(["national_teams_goals"], ascending=False)
+        .head(16)
+    )
+
+    national_teams_performance = national_teams_performance.merge(
+        df_teams[["team_key", "team_name"]], on="team_key", how="left"
+    )
+
+    national_teams_performance["national_teams_xg"] = national_teams_performance["national_teams_xg"].round(2)
+    national_teams_performance["national_teams_xgot"] = national_teams_performance["national_teams_xgot"].round(2)
+
+    fig, ax = plt.subplots(figsize=(12, 5))
+    fig.patch.set_facecolor("#0C0D0E")
+    ax.set_facecolor("#0C0D0E")
+
+    x = np.arange(len(national_teams_performance))
+    bar_width = 0.20
+
+    ax.bar(
+        x - bar_width,
+        national_teams_performance["national_teams_goals"],
+        width=bar_width,
+        label="Goals",
+        color="#003f5c"
+    )
+    ax.bar(
+        x,
+        national_teams_performance["national_teams_xg"],
+        width=bar_width,
+        label="xG",
+        color="#008c54"
+    )
+    ax.bar(
+        x + bar_width,
+        national_teams_performance["national_teams_xgot"],
+        width=bar_width,
+        label="xGOT",
+        color="#ffa600"
+    )
+
+    ax.set_xticks(x)
+    ax.set_xticklabels(
+        national_teams_performance["team_name"], rotation=45, ha="right", color="white"
+    )
+    ax.set_ylabel("Total", color="white")
+    ax.yaxis.label.set_color("white")
+    ax.tick_params(colors="white")
+    ax.legend(facecolor="#0C0D0E", labelcolor="white", edgecolor="gray")
+    ax.grid(True, alpha=0.2)
+    # render
+    st.pyplot(fig)
+    plt.close(fig)
 
 else:
     st.title("Shot Map by Player")

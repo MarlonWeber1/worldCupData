@@ -6,7 +6,7 @@ import matplotlib.font_manager as font_manager
 from mplsoccer import VerticalPitch
 
 BACKGROUND_COLOR = "#0C0D0E"
-ACCENT_COLOR = "#E4053A"
+ACCENT_COLOR = "#38BDF8"
 
 def get_font():
     try:
