@@ -10,6 +10,7 @@ import numpy as np
 
 from data_loader import load_refined_tables
 from shot_map import get_player_shots, calculate_stats, plot_shot_map
+from heat_map import plot_heat_map
 
 st.set_page_config(
     page_title="World Cup Data Engineering",
@@ -329,6 +330,89 @@ if page == "Main":
     # render
     st.pyplot(fig)
     plt.close(fig)
+
+    st.subheader("Shots by minute")
+    shots_minute = df_shots[
+        ["shot_id", "shot_type", "shot_minute", "added_time"]
+    ].copy()
+
+    conditions = [
+        (shots_minute["shot_minute"] <= 10) & (shots_minute["added_time"] == 0),
+        (shots_minute["shot_minute"] <= 20) & (shots_minute["added_time"] == 0),
+        (shots_minute["shot_minute"] <= 30) & (shots_minute["added_time"] == 0),
+        (shots_minute["shot_minute"] <= 40) & (shots_minute["added_time"] == 0),
+        (shots_minute["shot_minute"] <= 45) & (shots_minute["added_time"] == 0),
+        (shots_minute["shot_minute"] == 45) & (shots_minute["added_time"] > 0),
+        (shots_minute["shot_minute"] <= 55) & (shots_minute["added_time"] == 0),
+        (shots_minute["shot_minute"] <= 65) & (shots_minute["added_time"] == 0),
+        (shots_minute["shot_minute"] <= 75) & (shots_minute["added_time"] == 0),
+        (shots_minute["shot_minute"] <= 85) & (shots_minute["added_time"] == 0),
+        (shots_minute["shot_minute"] <= 90) & (shots_minute["added_time"] == 0),
+        (shots_minute["shot_minute"] == 90) & (shots_minute["added_time"] > 0),
+    ]
+
+    choices = ["0-10","11-20", "21-30", "31-40", "41-45", "45+", "46-55", "56-65", "66-75", "76-85", "86-90", "90+",]
+    shots_minute["period_time"] = np.select(conditions, choices, default="other")
+    order = ["0-10", "11-20", "21-30", "31-40", "41-45", "45+", "46-55", "56-65", "66-75", "76-85", "86-90", "90+",]
+    shots_minute["period_time"] = pd.Categorical(shots_minute["period_time"], categories=order, ordered=True)
+
+    shots_by_period = (
+        shots_minute.groupby("period_time", observed=True)
+        .agg(
+            shots=("shot_id", "count"),
+            goals=("shot_type", lambda x: (x == "goal").sum()),
+        )
+        .reset_index()
+    )
+
+    shots_by_period["conversion_rate"] = (shots_by_period["goals"] / shots_by_period["shots"]).round(2)
+
+    x = np.arange(len(shots_by_period))
+
+    fig, ax1 = plt.subplots(figsize=(14, 5))
+    fig.patch.set_facecolor("#0C0D0E")
+    ax1.set_facecolor("#0C0D0E")
+
+    ax1.bar(x, shots_by_period["shots"], color="#003f5c", label="Shots")
+    ax1.set_xticks(x)
+    ax1.set_xticklabels(shots_by_period["period_time"], color="white")
+    ax1.set_ylabel("Shots", color="white")
+    ax1.yaxis.label.set_color("white")
+    ax1.tick_params(colors="white")
+    ax1.grid(True, alpha=0.2, axis="y")
+
+    ax2 = ax1.twinx()
+    ax2.plot(
+        x,
+        shots_by_period["conversion_rate"],
+        color="#ffa600",
+        linewidth=2,
+        marker="o",
+        markersize=6,
+        label="Conv. Rate",
+    )
+    ax2.set_ylabel("Conversion Rate", color="white")
+    ax2.yaxis.label.set_color("white")
+    ax2.tick_params(colors="white")
+    ax2.yaxis.set_major_formatter(plt.FuncFormatter(lambda v, _: f"{v:.0%}"))
+
+    handles_a, labels_a = ax1.get_legend_handles_labels()
+    handles_b, labels_b = ax2.get_legend_handles_labels()
+    ax1.legend(
+        handles_a + handles_b,
+        labels_a + labels_b,
+        facecolor="#0C0D0E",
+        labelcolor="white",
+        edgecolor="gray",
+    )
+
+    st.pyplot(fig)
+    plt.close(fig)
+
+    st.subheader("Heat Map Shots")
+    fig_heat = plot_heat_map(df_shots, background_color=DARK_BG)
+    st.pyplot(fig_heat)
+    plt.close(fig_heat)
 
 else:
     st.title("Shot Map by Player")
