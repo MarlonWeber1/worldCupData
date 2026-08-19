@@ -91,7 +91,7 @@ for event_id in list_ids:
                             "minutesPlayed"
                         ),
                         "statistics.goals": item.get("statistics", {}).get("goals"),
-                        "statistics.assists": item.get("statistics", {}).get("assists"),
+                        "statistics.assists": item.get("statistics", {}).get("goalAssist"), # fix: i was taking the wrong key
                     }
                 )
 
