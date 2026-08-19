@@ -80,6 +80,15 @@ O aplicativo interativo em **Streamlit** é dividido em duas seções principais
   <img src="assets/shot_map.png" alt="Mapa de Chutes por Jogador" width="650" height = "500">
 </p>
 
+### 3. Tournament Shot Heat Map (Mapa de Calor do Torneio)
+- Visualização espacial de densidade de finalizações via Kernel Density Estimation (KDE).
+- Sistema de coordenadas verticais **Opta** com enquadramento de meio-campo ofensivo.
+- Identificação visual das zonas de maior volume e perigo de finalização ao longo de toda a Copa do Mundo.
+
+<p align="center">
+  <img src="assets/shot_heapmap.png" alt="Mapa de Calor de Chutes do Torneio" width="650" height="400">
+</p>
+
 ## Estrutura do Repositório
 
 ```text

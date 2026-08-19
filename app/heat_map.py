@@ -7,7 +7,7 @@ def plot_heat_map(
     df_shots: pd.DataFrame,
     background_color: str = "#0C0D0E",
     cmap: str = "magma",
-    title: str = "Shot Heat Map — World Cup",
+    title: str = "Shot HeatMap — World Cup 2026",
 ) -> plt.Figure:
     
     df_heat_map = df_shots[df_shots["result"] != "own"].copy()
